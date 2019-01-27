@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+<!-- 	<import resource="applicationContext-datasource.xml" /> -->
+		
+
+<!-- 	<context:component-scan base-package="com.jangty.edu"> -->
+<!-- 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Serivce" /> -->
+<!-- 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository" /> -->
+<!-- 	</context:component-scan> -->
+	
+	<!-- 스케줄러 설정 -->
+	<!-- <task:scheduler -->	
+	<!-- <task:executor -->	
+	
+	<!-- Mybatis -->
+	<!-- ==== SqlSessionFactory ==== -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+<!-- 		<property name="configLocation" value="classpath:mybatis-config.xml"/> -->
+		<property name="mapperLocations" value="classpath:com/jangty/edu/*/*.xml" />
+			<!-- mapper에서 패키지명+클래스명으로 쓰면 길어지기 때문에. 별칭 -->
+<!-- 		<property name="typeAliasesPackage" value="com.jangty.edu" /> --> 
+	</bean>
+
+	<!-- ==== mybatis sqlSessionTemplate ==== -->
+	<!-- Execute Type REUSE (default) -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"  destroy-method="clearCache">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+<!-- 		<constructor-arg index="1" value="REUSE" /> -->
+	</bean>
+
+	<!-- ==== Mapper 스캔 -->
+<!-- 	<bean id="sqlMap" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
+<!-- 		<property name="basePackage" value="com.jangty.edu" /> -->
+<!-- 	</bean>  -->
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+<!-- 	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">	 -->
+<!-- 		<tx:attributes> -->
+<!-- 			<tx:method name="select*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/> -->
+<!-- 			<tx:method name="get*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/> -->
+<!-- 			<tx:method name="add*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/> -->
+<!-- 			<tx:method name="delete*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/> -->
+<!-- 			<tx:method name="update*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/> -->
+<!-- 		</tx:attributes> -->
+<!-- 	</tx:advice>  -->
+	
+	<!-- AOP XML방식 -->
+<!-- 	<aop:config proxy-target-class="true"> -->
+<!-- 		<aop:advisor id="serviceTransactionAdvice" advice-ref="transactionAdvice" pointcut="execution(* com.jangty.edu.*.*Service.*(..))" /> -->
+<!-- 	</aop:config> -->
+	
+	<!-- AspectJ를 위한 태그 : 먼저 Spring AOP 때 이용한 ProxyFactoryBean에 해당하는 것을 자동으로 생성하는 태그  -->
+	<aop:aspectj-autoproxy/>
+	
+</beans>

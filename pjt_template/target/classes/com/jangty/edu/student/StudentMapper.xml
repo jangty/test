@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="StudentMapper">
+	<resultMap id="studentMap" type="com.jangty.edu.student.StudentVo">
+		<result property="studentId" column="student_id" javaType="int"/>
+		<result property="academyId" column="academy_id" javaType="int"/>
+		<result property="studentName" column="student_name" javaType="java.lang.String"/>
+		<result property="regDate" column="reg_date" javaType="java.lang.String"/>
+	</resultMap>
+	
+	
+	<select id="getStudentList" parameterType="java.util.HashMap" resultMap="studentMap">
+		SELECT student_id, academy_id, student_name, reg_date
+		FROM test.student
+	</select>
+</mapper>
+
